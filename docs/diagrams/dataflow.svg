@@ -1,0 +1,181 @@
+<svg width="1100" height="820" viewBox="0 0 1100 820" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round"/>
+</marker>
+</defs>
+<rect width="1100" height="820" fill="#F8F8F6"/>
+<text x="550" y="32" text-anchor="middle" font-size="18" font-weight="bold" fill="#1A1A1A">Mission Data Flow — Autonomous + Manual</text>
+
+<!-- COLUMNS -->
+<rect x="20"  y="55" width="140" height="740" rx="8" fill="#EAF3DE" stroke="#3B6D11" stroke-width="1"/>
+<text x="90"  y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#173404">GUI</text>
+<text x="90"  y="90" text-anchor="middle" font-size="10" fill="#3B6D11">Laptop PyQt5</text>
+
+<rect x="175" y="55" width="160" height="740" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1"/>
+<text x="255" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#042C53">robot_navigator</text>
+<text x="255" y="90" text-anchor="middle" font-size="10" fill="#185FA5">RPi</text>
+
+<rect x="350" y="55" width="140" height="740" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1"/>
+<text x="420" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#042C53">vision_node</text>
+<text x="420" y="90" text-anchor="middle" font-size="10" fill="#185FA5">RPi</text>
+
+<rect x="505" y="55" width="150" height="740" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="1"/>
+<text x="580" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#042C53">serial_node</text>
+<text x="580" y="90" text-anchor="middle" font-size="10" fill="#185FA5">RPi — UART bridge</text>
+
+<rect x="670" y="55" width="410" height="740" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="1"/>
+<text x="875" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#4A1B0C">ESP32</text>
+<text x="875" y="90" text-anchor="middle" font-size="10" fill="#993C1D">Low Level Controller</text>
+
+<!-- ═══ AUTONOMOUS FLOW ═══ -->
+<text x="550" y="118" text-anchor="middle" font-size="13" font-weight="bold" fill="#534AB7">── AUTONOMOUS MODE ──</text>
+
+<!-- 1. START -->
+<rect x="30" y="128" width="120" height="28" rx="5" fill="#3B6D11"/>
+<text x="90" y="147" text-anchor="middle" font-size="11" fill="#fff">User clicks START</text>
+<line x1="160" y1="142" x2="182" y2="142" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="170" y="136" font-size="9" fill="#3B6D11">/gui_command</text>
+
+<!-- 2. Send waypoint -->
+<rect x="185" y="128" width="140" height="28" rx="5" fill="#185FA5"/>
+<text x="255" y="147" text-anchor="middle" font-size="11" fill="#fff">Send P 5.0 0.0 90.0</text>
+<line x1="335" y1="142" x2="512" y2="142" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="0"/>
+<text x="420" y="136" font-size="9" fill="#185FA5">/cmd_position → "P x y yaw\n"</text>
+
+<!-- 3. ESP navigate -->
+<rect x="685" y="128" width="380" height="28" rx="5" fill="#993C1D"/>
+<text x="875" y="147" text-anchor="middle" font-size="11" fill="#fff">Cascaded PID: navigate to (5.0, 0.0)</text>
+
+<!-- 4. Odom feedback -->
+<line x1="680" y1="175" x2="512" y2="175" stroke="#EF9F27" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="596" y="169" font-size="9" fill="#EF9F27">"O x y yaw\n" → /robot_pose  (25Hz)</text>
+<line x1="497" y1="175" x2="182" y2="175" stroke="#EF9F27" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="165" y1="175" x2="30"  y2="175" stroke="#EF9F27" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="90"  y="196" text-anchor="middle" font-size="9" fill="#EF9F27">Map updates</text>
+
+<!-- 5. OBS state -->
+<line x1="680" y1="210" x2="512" y2="210" stroke="#D85A30" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="596" y="204" font-size="9" fill="#D85A30">"OBS STATIC/DYNAMIC/CLEAR\n" → /obstacle_state</text>
+<line x1="497" y1="210" x2="30"  y2="210" stroke="#D85A30" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="685" y="198" width="380" height="22" rx="4" fill="#fff" stroke="#D85A30" stroke-width="0.8"/>
+<text x="875" y="213" text-anchor="middle" font-size="10" fill="#D85A30">ESP32 handles avoidance autonomously — RPi only displays state</text>
+
+<!-- 6. REACHED -->
+<line x1="680" y1="248" x2="512" y2="248" stroke="#993C1D" stroke-width="2" marker-end="url(#arr)"/>
+<text x="596" y="242" font-size="9" fill="#993C1D" font-weight="bold">"REACHED\n"</text>
+<line x1="497" y1="248" x2="182" y2="248" stroke="#993C1D" stroke-width="2" marker-end="url(#arr)"/>
+<rect x="185" y="236" width="140" height="24" rx="4" fill="#185FA5"/>
+<text x="255" y="252" text-anchor="middle" font-size="11" fill="#fff">Start vision sequence</text>
+
+<!-- 7. CAM_READY -->
+<line x1="680" y1="290" x2="512" y2="290" stroke="#993C1D" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="596" y="284" font-size="9" fill="#993C1D">"CAM_READY 0\n" → /cam_ready</text>
+<line x1="497" y1="290" x2="182" y2="290" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="185" y="278" width="140" height="24" rx="4" fill="#185FA5"/>
+<text x="255" y="295" text-anchor="middle" font-size="11" fill="#fff">Trigger vision angle=0</text>
+
+<!-- 8. Vision capture -->
+<line x1="335" y1="310" x2="358" y2="310" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="344" y="304" font-size="9" fill="#185FA5">/cam_ready</text>
+<rect x="360" y="298" width="120" height="24" rx="4" fill="#0F6E56"/>
+<text x="420" y="314" text-anchor="middle" font-size="11" fill="#fff">Capture + YOLO</text>
+
+<!-- 9. Vision done -->
+<line x1="360" y1="340" x2="182" y2="340" stroke="#0F6E56" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="270" y="334" font-size="9" fill="#0F6E56">/vision_done + /detection_result</text>
+<line x1="30" y1="340" x2="165" y2="340" stroke="#0F6E56" stroke-width="1.5" marker-start="url(#arr)"/>
+<rect x="30" y="328" width="120" height="24" rx="4" fill="#0F6E56"/>
+<text x="90" y="344" text-anchor="middle" font-size="11" fill="#fff">Show detection img</text>
+
+<!-- 10. CAM_NEXT -->
+<line x1="182" y1="368" x2="512" y2="368" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="344" y="362" font-size="9" fill="#185FA5">/cam_next → "CAM_NEXT\n"</text>
+<line x1="520" y1="368" x2="680" y2="368" stroke="#534AB7" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="685" y="356" width="380" height="24" rx="4" fill="#993C1D"/>
+<text x="875" y="372" text-anchor="middle" font-size="11" fill="#fff">Move camera to next angle → CAM_READY 30 → ...</text>
+
+<!-- repeat note -->
+<rect x="185" y="390" width="480" height="20" rx="4" fill="#EEEDFE"/>
+<text x="425" y="404" text-anchor="middle" font-size="10" fill="#534AB7">↑ Repeat for all angles (0°, 30°, -30°) ↑</text>
+
+<!-- 11. CAM_DONE -->
+<line x1="680" y1="428" x2="512" y2="428" stroke="#993C1D" stroke-width="2" marker-end="url(#arr)"/>
+<text x="596" y="422" font-size="9" fill="#993C1D" font-weight="bold">"CAM_DONE\n"</text>
+<line x1="497" y1="428" x2="182" y2="428" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="185" y="416" width="140" height="24" rx="4" fill="#185FA5"/>
+<text x="255" y="432" text-anchor="middle" font-size="11" fill="#fff">Send next waypoint</text>
+<line x1="335" y1="428" x2="512" y2="428" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="520" y1="428" x2="680" y2="428" stroke="#534AB7" stroke-width="1.5" marker-end="url(#arr)"/>
+
+<!-- ═══ MANUAL FLOW ═══ -->
+<line x1="20" y1="470" x2="1080" y2="470" stroke="#888" stroke-width="0.8" stroke-dasharray="4 3"/>
+<text x="550" y="492" text-anchor="middle" font-size="13" font-weight="bold" fill="#534AB7">── MANUAL MODE ──</text>
+
+<!-- 12. MANUAL button -->
+<rect x="30" y="502" width="120" height="28" rx="5" fill="#3B6D11"/>
+<text x="90" y="521" text-anchor="middle" font-size="11" fill="#fff">Click MANUAL</text>
+<line x1="160" y1="516" x2="182" y2="516" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="170" y="510" font-size="9" fill="#3B6D11">/gui_command "manual"</text>
+<rect x="185" y="504" width="140" height="24" rx="4" fill="#185FA5"/>
+<text x="255" y="520" text-anchor="middle" font-size="11" fill="#fff">Pause mission</text>
+<line x1="335" y1="516" x2="512" y2="516" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="420" y="510" font-size="9" fill="#185FA5">"M MANUAL\n"</text>
+<line x1="520" y1="516" x2="680" y2="516" stroke="#534AB7" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="685" y="504" width="380" height="24" rx="4" fill="#993C1D"/>
+<text x="875" y="520" text-anchor="middle" font-size="11" fill="#fff">Switch to velocity loop (no position target)</text>
+
+<!-- 13. Button held -->
+<rect x="30" y="545" width="120" height="28" rx="5" fill="#3B6D11"/>
+<text x="90" y="564" text-anchor="middle" font-size="11" fill="#fff">Hold ↑ Forward</text>
+<line x1="160" y1="559" x2="512" y2="559" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="336" y="553" font-size="9" fill="#3B6D11">/gui_command "D F" → "D F\n"</text>
+<line x1="520" y1="559" x2="680" y2="559" stroke="#534AB7" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="685" y="547" width="380" height="24" rx="4" fill="#993C1D"/>
+<text x="875" y="563" text-anchor="middle" font-size="11" fill="#fff">linear=0.15 m/s  angular=0.0 rad/s → PWM</text>
+
+<!-- 14. Button released -->
+<rect x="30" y="588" width="120" height="24" rx="5" fill="#3B6D11"/>
+<text x="90" y="604" text-anchor="middle" font-size="11" fill="#fff">Release button</text>
+<line x1="160" y1="600" x2="512" y2="600" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="336" y="594" font-size="9" fill="#3B6D11">"D S\n" → Stop</text>
+<line x1="520" y1="600" x2="680" y2="600" stroke="#534AB7" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="685" y="588" width="380" height="24" rx="4" fill="#993C1D"/>
+<text x="875" y="604" text-anchor="middle" font-size="11" fill="#fff">linear=0  angular=0  →  stop</text>
+
+<!-- ═══ RETURN TO AUTO ═══ -->
+<line x1="20" y1="630" x2="1080" y2="630" stroke="#888" stroke-width="0.8" stroke-dasharray="4 3"/>
+<text x="550" y="650" text-anchor="middle" font-size="13" font-weight="bold" fill="#534AB7">── RETURN TO AUTO ──</text>
+
+<rect x="30"  y="660" width="120" height="28" rx="5" fill="#3B6D11"/>
+<text x="90"  y="678" text-anchor="middle" font-size="11" fill="#fff">Click AUTO</text>
+<line x1="160" y1="674" x2="182" y2="674" stroke="#3B6D11" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="185" y="662" width="140" height="24" rx="4" fill="#185FA5"/>
+<text x="255" y="678" text-anchor="middle" font-size="11" fill="#fff">Send P 0.0 0.0 0.0</text>
+<line x1="335" y1="674" x2="512" y2="674" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)"/>
+<text x="420" y="668" font-size="9" fill="#185FA5">"M AUTO\n" + "P 0 0 0\n"</text>
+<line x1="520" y1="674" x2="680" y2="674" stroke="#534AB7" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="685" y="662" width="380" height="24" rx="4" fill="#993C1D"/>
+<text x="875" y="678" text-anchor="middle" font-size="11" fill="#fff">Navigate to (0,0) using position PID</text>
+
+<line x1="680" y1="714" x2="512" y2="714" stroke="#993C1D" stroke-width="2" marker-end="url(#arr)"/>
+<text x="596" y="708" font-size="9" fill="#993C1D" font-weight="bold">"REACHED\n"</text>
+<line x1="497" y1="714" x2="182" y2="714" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="185" y="702" width="140" height="24" rx="4" fill="#185FA5"/>
+<text x="255" y="718" text-anchor="middle" font-size="11" fill="#fff">Reset to WP A, resume</text>
+<line x1="335" y1="714" x2="512" y2="714" stroke="#185FA5" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="520" y1="714" x2="680" y2="714" stroke="#534AB7" stroke-width="1.5" marker-end="url(#arr)"/>
+<rect x="685" y="726" width="380" height="24" rx="4" fill="#993C1D"/>
+<text x="875" y="742" text-anchor="middle" font-size="11" fill="#fff">Receives P 5.0 0.0 90.0 → mission resumes</text>
+
+<!-- LEGEND -->
+<rect x="20" y="768" width="1060" height="42" rx="6" fill="#fff" stroke="#ccc" stroke-width="0.8"/>
+<rect x="35"  y="780" width="14" height="14" rx="2" fill="#3B6D11"/><text x="56"  y="792" font-size="10" fill="#333">GUI action</text>
+<rect x="145" y="780" width="14" height="14" rx="2" fill="#185FA5"/><text x="166" y="792" font-size="10" fill="#333">robot_navigator</text>
+<rect x="290" y="780" width="14" height="14" rx="2" fill="#0F6E56"/><text x="311" y="792" font-size="10" fill="#333">vision_node</text>
+<rect x="410" y="780" width="14" height="14" rx="2" fill="#534AB7"/><text x="431" y="792" font-size="10" fill="#333">serial_node (UART)</text>
+<rect x="570" y="780" width="14" height="14" rx="2" fill="#993C1D"/><text x="591" y="792" font-size="10" fill="#333">ESP32 execution</text>
+<rect x="700" y="780" width="14" height="14" rx="2" fill="#EF9F27"/><text x="721" y="792" font-size="10" fill="#333">Odometry feedback (25Hz)</text>
+<rect x="880" y="780" width="14" height="14" rx="2" fill="#D85A30"/><text x="901" y="792" font-size="10" fill="#333">Obstacle state (on change)</text>
+
+</svg>

@@ -1,0 +1,205 @@
+<svg width="900" height="1500" viewBox="0 0 900 1500" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+<defs>
+<marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#555" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect width="900" height="1500" fill="#fff"/>
+
+<!-- ══════════ HIGH LEVEL ══════════ -->
+<text x="450" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">Software Flowchart — High-Level Control Logic</text>
+
+<!-- START -->
+<rect x="350" y="44" width="200" height="38" rx="19" fill="#D3D1C7" stroke="#5F5E5A" stroke-width="0.8"/>
+<text x="450" y="63" text-anchor="middle" font-size="13" font-weight="bold" fill="#2C2C2A" dominant-baseline="central">System start</text>
+<line x1="450" y1="82" x2="450" y2="104" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- WAIT START -->
+<rect x="310" y="104" width="280" height="50" rx="8" fill="#F1EFE8" stroke="#888" stroke-width="0.8"/>
+<text x="450" y="122" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Wait for START signal</text>
+<text x="450" y="142" text-anchor="middle" font-size="10" fill="#666">/robot_command topic (String)</text>
+<line x1="450" y1="154" x2="450" y2="176" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- MISSION ACTIVE -->
+<rect x="310" y="176" width="280" height="50" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="450" y="194" text-anchor="middle" font-size="12" font-weight="bold" fill="#085041">Mission active</text>
+<text x="450" y="214" text-anchor="middle" font-size="10" fill="#0F6E56">Read sensors via control_loop at 10 Hz</text>
+<line x1="450" y1="226" x2="450" y2="248" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- OBSTACLE? -->
+<rect x="295" y="248" width="310" height="50" rx="8" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.8"/>
+<text x="450" y="266" text-anchor="middle" font-size="12" font-weight="bold" fill="#412402">Obstacle detected?</text>
+<text x="450" y="286" text-anchor="middle" font-size="10" fill="#633806">dist_L, dist_F, or dist_R &lt; 0.6m</text>
+
+<!-- NO → right -->
+<line x1="605" y1="273" x2="690" y2="273" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+<text x="645" y="265" text-anchor="middle" font-size="10" fill="#555">No</text>
+<rect x="690" y="248" width="120" height="50" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="750" y="266" text-anchor="middle" font-size="12" font-weight="bold" fill="#085041">Navigate</text>
+<text x="750" y="284" text-anchor="middle" font-size="10" fill="#0F6E56">sub-states below</text>
+<line x1="750" y1="298" x2="750" y2="380" stroke="#555" stroke-width="0.8"/>
+<line x1="750" y1="380" x2="605" y2="380" stroke="#555" stroke-width="0.8" marker-end="url(#arr)"/>
+
+<!-- YES → down -->
+<line x1="450" y1="298" x2="450" y2="320" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+<text x="432" y="314" text-anchor="middle" font-size="10" fill="#555">Yes</text>
+
+<!-- WAITING 5s -->
+<rect x="295" y="320" width="310" height="50" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="450" y="338" text-anchor="middle" font-size="12" font-weight="bold" fill="#3C3489">Waiting mode — 5 seconds</text>
+<text x="450" y="358" text-anchor="middle" font-size="10" fill="#534AB7">Robot stopped, raw readings recorded</text>
+<line x1="450" y1="370" x2="450" y2="392" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- CLASSIFY -->
+<rect x="295" y="392" width="310" height="50" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="450" y="410" text-anchor="middle" font-size="12" font-weight="bold" fill="#3C3489">Classify obstacle</text>
+<text x="450" y="430" text-anchor="middle" font-size="10" fill="#534AB7">Front variation &gt; 0.1m? (front-only rule)</text>
+
+<!-- STATIC → left -->
+<line x1="295" y1="417" x2="175" y2="417" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+<text x="232" y="409" text-anchor="middle" font-size="10" fill="#555">Static</text>
+<rect x="60" y="392" width="115" height="50" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.8"/>
+<text x="117" y="410" text-anchor="middle" font-size="12" font-weight="bold" fill="#4A1B0C">Avoid mode</text>
+<text x="117" y="428" text-anchor="middle" font-size="10" fill="#712B13">8-case reactive</text>
+<line x1="117" y1="442" x2="117" y2="492" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+<rect x="60" y="492" width="115" height="50" rx="8" fill="#FAECE7" stroke="#993C1D" stroke-width="0.8"/>
+<text x="117" y="510" text-anchor="middle" font-size="12" font-weight="bold" fill="#4A1B0C">Recover mode</text>
+<text x="117" y="528" text-anchor="middle" font-size="10" fill="#712B13">Return to leg axis</text>
+<line x1="175" y1="517" x2="295" y2="517" stroke="#555" stroke-width="0.8"/>
+<line x1="295" y1="517" x2="295" y2="560" stroke="#555" stroke-width="0.8"/>
+<line x1="295" y1="560" x2="450" y2="560" stroke="#555" stroke-width="0.8" marker-end="url(#arr)"/>
+
+<!-- DYNAMIC → right -->
+<line x1="605" y1="417" x2="725" y2="417" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+<text x="663" y="409" text-anchor="middle" font-size="10" fill="#555">Dynamic</text>
+<rect x="725" y="392" width="130" height="50" rx="8" fill="#E6F1FB" stroke="#185FA5" stroke-width="0.8"/>
+<text x="790" y="410" text-anchor="middle" font-size="12" font-weight="bold" fill="#042C53">Wait dynamic</text>
+<text x="790" y="428" text-anchor="middle" font-size="10" fill="#185FA5">All sensors clear 2s</text>
+<line x1="790" y1="442" x2="790" y2="560" stroke="#555" stroke-width="0.8"/>
+<line x1="790" y1="560" x2="605" y2="560" stroke="#555" stroke-width="0.8" marker-end="url(#arr)"/>
+<text x="700" y="555" text-anchor="middle" font-size="10" fill="#555">Resume</text>
+
+<!-- WAYPOINT REACHED -->
+<rect x="295" y="560" width="310" height="50" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="450" y="578" text-anchor="middle" font-size="12" font-weight="bold" fill="#085041">Waypoint reached</text>
+<text x="450" y="598" text-anchor="middle" font-size="10" fill="#0F6E56">distance ≤ 0.35m — stop immediately</text>
+<line x1="450" y1="610" x2="450" y2="632" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- STOP 10s -->
+<rect x="295" y="632" width="310" height="50" rx="8" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.8"/>
+<text x="450" y="650" text-anchor="middle" font-size="12" font-weight="bold" fill="#173404">Stop 10s + gears active</text>
+<text x="450" y="670" text-anchor="middle" font-size="10" fill="#27500A">GearMover cycles 4 positions at 1Hz</text>
+<line x1="450" y1="682" x2="450" y2="704" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- ROTATE TO FINAL -->
+<rect x="295" y="704" width="310" height="50" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="450" y="722" text-anchor="middle" font-size="12" font-weight="bold" fill="#085041">Rotate to next leg heading</text>
+<text x="450" y="742" text-anchor="middle" font-size="10" fill="#0F6E56">yaw_pid aligns to target heading</text>
+<line x1="450" y1="754" x2="450" y2="776" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- ADVANCE -->
+<rect x="295" y="776" width="310" height="50" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="450" y="794" text-anchor="middle" font-size="12" font-weight="bold" fill="#085041">Advance to next waypoint</text>
+<text x="450" y="814" text-anchor="middle" font-size="10" fill="#0F6E56">A → B → C → D → A (loop)</text>
+
+<!-- Loop back -->
+<line x1="295" y1="801" x2="165" y2="801" stroke="#555" stroke-width="0.8"/>
+<line x1="165" y1="801" x2="165" y2="201" stroke="#555" stroke-width="0.8"/>
+<line x1="165" y1="201" x2="310" y2="201" stroke="#555" stroke-width="0.8" marker-end="url(#arr)"/>
+<text x="132" y="505" text-anchor="middle" font-size="10" fill="#888">Next loop</text>
+
+<!-- ══════════ DIVIDER ══════════ -->
+<line x1="40" y1="860" x2="860" y2="860" stroke="#ccc" stroke-width="1" stroke-dasharray="5 4"/>
+<text x="450" y="886" text-anchor="middle" font-size="16" font-weight="bold" fill="#222">Software Flowchart — Low-Level Control Implementation</text>
+
+<!-- SENSOR INPUT ROW -->
+<rect x="20" y="904" width="160" height="56" rx="8" fill="#F1EFE8" stroke="#888" stroke-width="0.8"/>
+<text x="100" y="924" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Sensor inputs</text>
+<text x="100" y="942" text-anchor="middle" font-size="10" fill="#666">/scan + /scan_right</text>
+<text x="100" y="956" text-anchor="middle" font-size="10" fill="#666">raw LaserScan arrays</text>
+
+<line x1="180" y1="932" x2="220" y2="932" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<rect x="220" y="904" width="210" height="56" rx="8" fill="#F1EFE8" stroke="#888" stroke-width="0.8"/>
+<text x="325" y="924" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Clean + split regions</text>
+<text x="325" y="942" text-anchor="middle" font-size="10" fill="#666">NaN→10, &lt;0.5m→10</text>
+<text x="325" y="956" text-anchor="middle" font-size="10" fill="#666">split → L / F / R arrays</text>
+
+<line x1="430" y1="932" x2="470" y2="932" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<rect x="470" y="904" width="210" height="56" rx="8" fill="#F1EFE8" stroke="#888" stroke-width="0.8"/>
+<text x="575" y="924" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Smooth (window=5)</text>
+<text x="575" y="942" text-anchor="middle" font-size="10" fill="#666">deque moving average</text>
+<text x="575" y="956" text-anchor="middle" font-size="10" fill="#666">→ dist_L, dist_F, dist_R</text>
+
+<!-- IMU + ODOM ROW -->
+<rect x="20" y="980" width="160" height="44" rx="8" fill="#F1EFE8" stroke="#888" stroke-width="0.8"/>
+<text x="100" y="997" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">IMU heading</text>
+<text x="100" y="1015" text-anchor="middle" font-size="10" fill="#666">/imu → yaw only</text>
+
+<line x1="180" y1="1002" x2="220" y2="1002" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<rect x="220" y="980" width="210" height="44" rx="8" fill="#F1EFE8" stroke="#888" stroke-width="0.8"/>
+<text x="325" y="997" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Odometry position</text>
+<text x="325" y="1015" text-anchor="middle" font-size="10" fill="#666">/odom → x, y only</text>
+
+<!-- Merge arrows -->
+<line x1="325" y1="960" x2="325" y2="1060" stroke="#555" stroke-width="0.8"/>
+<line x1="575" y1="960" x2="575" y2="1010" stroke="#555" stroke-width="0.8"/>
+<line x1="575" y1="1010" x2="325" y2="1010" stroke="#555" stroke-width="0.8"/>
+<line x1="325" y1="1024" x2="325" y2="1060" stroke="#555" stroke-width="0.8"/>
+<line x1="325" y1="1060" x2="450" y2="1060" stroke="#555" stroke-width="0.8" marker-end="url(#arr)"/>
+
+<!-- PID ROW -->
+<rect x="40" y="1076" width="300" height="64" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="190" y="1096" text-anchor="middle" font-size="12" font-weight="bold" fill="#3C3489">steer_pid (move_forward)</text>
+<text x="190" y="1114" text-anchor="middle" font-size="10" fill="#534AB7">KP=3.0  KI=1.5  KD=0.05</text>
+<text x="190" y="1130" text-anchor="middle" font-size="10" fill="#534AB7">error = leg_heading − current_yaw</text>
+
+<rect x="460" y="1076" width="300" height="64" rx="8" fill="#EEEDFE" stroke="#534AB7" stroke-width="0.8"/>
+<text x="610" y="1096" text-anchor="middle" font-size="12" font-weight="bold" fill="#3C3489">yaw_pid (in-place rotation)</text>
+<text x="610" y="1114" text-anchor="middle" font-size="10" fill="#534AB7">KP=0.5  KI=0.05  KD=0.05</text>
+<text x="610" y="1130" text-anchor="middle" font-size="10" fill="#534AB7">error = target_heading − current_yaw</text>
+
+<line x1="450" y1="1060" x2="190" y2="1076" stroke="#555" stroke-width="0.8" marker-end="url(#arr)"/>
+<line x1="450" y1="1060" x2="610" y2="1076" stroke="#555" stroke-width="0.8" marker-end="url(#arr)"/>
+
+<line x1="190" y1="1140" x2="190" y2="1168" stroke="#555" stroke-width="0.8"/>
+<line x1="610" y1="1140" x2="610" y2="1168" stroke="#555" stroke-width="0.8"/>
+<line x1="190" y1="1168" x2="400" y2="1168" stroke="#555" stroke-width="0.8"/>
+<line x1="610" y1="1168" x2="400" y2="1168" stroke="#555" stroke-width="0.8"/>
+<line x1="400" y1="1168" x2="400" y2="1188" stroke="#555" stroke-width="0.8" marker-end="url(#arr)"/>
+
+<!-- CMD VEL -->
+<rect x="200" y="1188" width="400" height="60" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="400" y="1208" text-anchor="middle" font-size="12" font-weight="bold" fill="#085041">Publish /diff_drive_controller/cmd_vel</text>
+<text x="400" y="1226" text-anchor="middle" font-size="10" fill="#0F6E56">TwistStamped: linear.x (m/s) + angular.z (rad/s)</text>
+<text x="400" y="1242" text-anchor="middle" font-size="10" fill="#0F6E56">Max linear: 0.15 m/s   Max angular: 0.5 rad/s</text>
+<line x1="400" y1="1248" x2="400" y2="1272" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- DIFF DRIVE -->
+<rect x="200" y="1272" width="400" height="60" rx="8" fill="#E1F5EE" stroke="#0F6E56" stroke-width="0.8"/>
+<text x="400" y="1292" text-anchor="middle" font-size="12" font-weight="bold" fill="#085041">Differential drive controller</text>
+<text x="400" y="1310" text-anchor="middle" font-size="10" fill="#0F6E56">Left wheel vel = v − ω·d/2</text>
+<text x="400" y="1326" text-anchor="middle" font-size="10" fill="#0F6E56">Right wheel vel = v + ω·d/2   (d = 0.372m)</text>
+<line x1="400" y1="1332" x2="400" y2="1356" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- ROBOT MOTION -->
+<rect x="270" y="1356" width="260" height="50" rx="8" fill="#EAF3DE" stroke="#3B6D11" stroke-width="0.8"/>
+<text x="400" y="1374" text-anchor="middle" font-size="12" font-weight="bold" fill="#173404">Robot physical motion</text>
+<text x="400" y="1392" text-anchor="middle" font-size="10" fill="#27500A">Wheel torques applied via PWM</text>
+<line x1="400" y1="1406" x2="400" y2="1430" stroke="#555" stroke-width="1" marker-end="url(#arr)"/>
+
+<!-- FEEDBACK -->
+<rect x="270" y="1430" width="260" height="50" rx="8" fill="#F1EFE8" stroke="#888" stroke-width="0.8"/>
+<text x="400" y="1448" text-anchor="middle" font-size="12" font-weight="bold" fill="#333">Feedback: odom + IMU</text>
+<text x="400" y="1466" text-anchor="middle" font-size="10" fill="#666">Updates x, y, yaw for next tick</text>
+
+<!-- Feedback loop arrow -->
+<line x1="270" y1="1455" x2="150" y2="1455" stroke="#555" stroke-width="0.8"/>
+<line x1="150" y1="1455" x2="150" y2="1002" stroke="#555" stroke-width="0.8"/>
+<line x1="150" y1="1002" x2="180" y2="1002" stroke="#555" stroke-width="0.8" marker-end="url(#arr)"/>
+<text x="110" y="1230" text-anchor="middle" font-size="10" fill="#888">Feedback</text>
+<text x="110" y="1245" text-anchor="middle" font-size="10" fill="#888">loop</text>
+
+</svg>

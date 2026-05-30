@@ -1,0 +1,273 @@
+<svg width="1100" height="1400" viewBox="0 0 1100 1400" xmlns="http://www.w3.org/2000/svg" font-family="Arial, sans-serif">
+<rect width="1100" height="1400" fill="#F8F8F6"/>
+
+<!-- TITLE -->
+<text x="550" y="38" text-anchor="middle" font-size="20" font-weight="bold" fill="#1A1A1A">Mobile Robot — Complete System Architecture</text>
+<text x="550" y="60" text-anchor="middle" font-size="12" fill="#666">GUI (Laptop)  ↔  Raspberry Pi (High Level)  ↔  ESP32 (Low Level)</text>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LAYER 1 — GUI
+═══════════════════════════════════════════════════════════ -->
+<rect x="30" y="80" width="1040" height="220" rx="14" fill="#EAF3DE" stroke="#3B6D11" stroke-width="1.5"/>
+<text x="55" y="104" font-size="14" font-weight="bold" fill="#173404">LAYER 1 — Laptop  |  gui_node.py  (PyQt5 + ROS2)</text>
+<text x="55" y="120" font-size="11" fill="#3B6D11">Connected via WiFi — ROS2 DDS (CycloneDDS) on same network as Raspberry Pi</text>
+
+<!-- GUI panels -->
+<rect x="55" y="132" width="180" height="148" rx="8" fill="#fff" stroke="#3B6D11" stroke-width="0.8"/>
+<text x="145" y="150" text-anchor="middle" font-size="12" font-weight="bold" fill="#173404">Map Panel</text>
+<text x="145" y="168" text-anchor="middle" font-size="10" fill="#555">Live x,y robot position</text>
+<text x="145" y="183" text-anchor="middle" font-size="10" fill="#555">Path trajectory drawn</text>
+<text x="145" y="198" text-anchor="middle" font-size="10" fill="#555">Waypoints A B C D</text>
+<text x="145" y="213" text-anchor="middle" font-size="10" fill="#555">Current heading arrow</text>
+<text x="145" y="228" text-anchor="middle" font-size="10" fill="#555">Obstacle indicator</text>
+<text x="145" y="248" text-anchor="middle" font-size="10" fill="#3B6D11">← /robot_pose (25Hz)</text>
+<text x="145" y="263" text-anchor="middle" font-size="10" fill="#3B6D11">← /obstacle_state</text>
+
+<rect x="255" y="132" width="190" height="148" rx="8" fill="#fff" stroke="#3B6D11" stroke-width="0.8"/>
+<text x="350" y="150" text-anchor="middle" font-size="12" font-weight="bold" fill="#173404">Mission Controls</text>
+<text x="350" y="168" text-anchor="middle" font-size="10" fill="#555">[ START ]  [ STOP ]</text>
+<text x="350" y="183" text-anchor="middle" font-size="10" fill="#555">[ AUTO ]  [ MANUAL ]</text>
+<text x="350" y="198" text-anchor="middle" font-size="10" fill="#555">[ EMERGENCY STOP ]</text>
+<text x="350" y="213" text-anchor="middle" font-size="10" fill="#555">State: navigating/vision/idle</text>
+<text x="350" y="228" text-anchor="middle" font-size="10" fill="#555">Waypoint progress: B→C→D</text>
+<text x="350" y="248" text-anchor="middle" font-size="10" fill="#E04010">→ /gui_command (String)</text>
+<text x="350" y="263" text-anchor="middle" font-size="10" fill="#3B6D11">← /mission_state (String)</text>
+
+<rect x="465" y="132" width="190" height="148" rx="8" fill="#fff" stroke="#3B6D11" stroke-width="0.8"/>
+<text x="560" y="150" text-anchor="middle" font-size="12" font-weight="bold" fill="#173404">Manual Drive</text>
+<text x="560" y="168" text-anchor="middle" font-size="10" fill="#555">[ ↑ Forward  ]</text>
+<text x="560" y="183" text-anchor="middle" font-size="10" fill="#555">[ ↓ Backward ]</text>
+<text x="560" y="198" text-anchor="middle" font-size="10" fill="#555">[ ← Left ] [ Right → ]</text>
+<text x="560" y="213" text-anchor="middle" font-size="10" fill="#555">Hold = constant motion</text>
+<text x="560" y="228" text-anchor="middle" font-size="10" fill="#555">Release = stop</text>
+<text x="560" y="248" text-anchor="middle" font-size="10" fill="#E04010">→ /gui_command "D F/B/L/R/S"</text>
+<text x="560" y="263" text-anchor="middle" font-size="10" fill="#555">(active in MANUAL mode only)</text>
+
+<rect x="675" y="132" width="370" height="148" rx="8" fill="#fff" stroke="#3B6D11" stroke-width="0.8"/>
+<text x="860" y="150" text-anchor="middle" font-size="12" font-weight="bold" fill="#173404">Detection Results</text>
+<text x="860" y="168" text-anchor="middle" font-size="10" fill="#555">Saved annotated images per waypoint</text>
+<text x="860" y="183" text-anchor="middle" font-size="10" fill="#555">[ Waypoint B ] bottle  conf: 0.97  angle: 0°</text>
+<text x="860" y="198" text-anchor="middle" font-size="10" fill="#555">[ Waypoint C ] can     conf: 0.89  angle: 30°</text>
+<text x="860" y="213" text-anchor="middle" font-size="10" fill="#555">[ Waypoint D ] box     conf: 0.94  angle: -30°</text>
+<text x="860" y="228" text-anchor="middle" font-size="10" fill="#555">Mission log with timestamps</text>
+<text x="860" y="248" text-anchor="middle" font-size="10" fill="#3B6D11">← /detection_result (String JSON)</text>
+<text x="860" y="263" text-anchor="middle" font-size="10" fill="#3B6D11">← /mission_log (String)</text>
+
+<!-- ═══════════════════════════════════════════════════════════
+     WIFI ARROW
+═══════════════════════════════════════════════════════════ -->
+<line x1="550" y1="300" x2="550" y2="345" stroke="#3B6D11" stroke-width="2" marker-end="url(#arrowGreen)" stroke-dasharray="6 3"/>
+<line x1="550" y1="345" x2="550" y2="300" stroke="#E04010" stroke-width="2" marker-end="url(#arrowRed)" stroke-dasharray="6 3"/>
+<rect x="390" y="308" width="320" height="22" rx="4" fill="#EAF3DE"/>
+<text x="550" y="323" text-anchor="middle" font-size="11" font-weight="bold" fill="#173404">WiFi — ROS2 DDS (CycloneDDS) — same network</text>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LAYER 2 — RASPBERRY PI
+═══════════════════════════════════════════════════════════ -->
+<rect x="30" y="350" width="1040" height="430" rx="14" fill="#E6F1FB" stroke="#185FA5" stroke-width="1.5"/>
+<text x="55" y="374" font-size="14" font-weight="bold" fill="#042C53">LAYER 2 — Raspberry Pi 4  |  High Level  |  ROS2 Jazzy</text>
+<text x="55" y="390" font-size="11" fill="#185FA5">All nodes run on RPi — communicate via ROS2 topics (localhost)</text>
+
+<!-- robot_navigator.py -->
+<rect x="55" y="402" width="300" height="350" rx="10" fill="#fff" stroke="#185FA5" stroke-width="1"/>
+<text x="205" y="422" text-anchor="middle" font-size="13" font-weight="bold" fill="#042C53">robot_navigator.py</text>
+<text x="205" y="438" text-anchor="middle" font-size="10" fill="#185FA5">Mission state machine + mode manager</text>
+<line x1="70" y1="445" x2="340" y2="445" stroke="#ddd" stroke-width="0.8"/>
+<text x="70" y="462" font-size="11" font-weight="bold" fill="#333">States:</text>
+<text x="70" y="478" font-size="10" fill="#555">  idle → auto → navigating</text>
+<text x="70" y="493" font-size="10" fill="#555">  → vision → next waypoint</text>
+<text x="70" y="508" font-size="10" fill="#555">  manual → returning_home</text>
+<text x="70" y="528" font-size="11" font-weight="bold" fill="#333">Waypoint sequence:</text>
+<text x="70" y="544" font-size="10" fill="#555">  A(0,0) → B(5,0) → C(5,2.5) → D(-0.5,2)</text>
+<text x="70" y="564" font-size="11" font-weight="bold" fill="#333">On REACHED:</text>
+<text x="70" y="580" font-size="10" fill="#555">  waits for CAM_READY per angle</text>
+<text x="70" y="595" font-size="10" fill="#555">  triggers vision_node per angle</text>
+<text x="70" y="610" font-size="10" fill="#555">  sends CAM_NEXT after capture</text>
+<text x="70" y="625" font-size="10" fill="#555">  on CAM_DONE → next waypoint</text>
+<line x1="70" y1="635" x2="340" y2="635" stroke="#ddd" stroke-width="0.8"/>
+<text x="70" y="650" font-size="11" font-weight="bold" fill="#E04010">Publishes:</text>
+<text x="70" y="666" font-size="10" fill="#E04010">  /cmd_position  /mission_state</text>
+<text x="70" y="681" font-size="10" fill="#E04010">  /robot_pose    /mission_log</text>
+<text x="70" y="696" font-size="10" fill="#E04010">  /mode_cmd      /cam_next</text>
+<text x="70" y="716" font-size="11" font-weight="bold" fill="#3B6D11">Subscribes:</text>
+<text x="70" y="732" font-size="10" fill="#3B6D11">  /gui_command   /esp_message</text>
+<text x="70" y="747" font-size="10" fill="#3B6D11">  /vision_done</text>
+
+<!-- vision_node.py -->
+<rect x="375" y="402" width="240" height="350" rx="10" fill="#fff" stroke="#185FA5" stroke-width="1"/>
+<text x="495" y="422" text-anchor="middle" font-size="13" font-weight="bold" fill="#042C53">vision_node.py</text>
+<text x="495" y="438" text-anchor="middle" font-size="10" fill="#185FA5">YOLOv8 object detection</text>
+<line x1="390" y1="445" x2="600" y2="445" stroke="#ddd" stroke-width="0.8"/>
+<text x="390" y="462" font-size="11" font-weight="bold" fill="#333">Triggered by:</text>
+<text x="390" y="478" font-size="10" fill="#555">  /cam_ready topic from</text>
+<text x="390" y="493" font-size="10" fill="#555">  robot_navigator</text>
+<text x="390" y="513" font-size="11" font-weight="bold" fill="#333">Per trigger:</text>
+<text x="390" y="529" font-size="10" fill="#555">  1. Capture frame (USB cam)</text>
+<text x="390" y="544" font-size="10" fill="#555">  2. Run YOLOv8 inference</text>
+<text x="390" y="559" font-size="10" fill="#555">  3. Save annotated image</text>
+<text x="390" y="574" font-size="10" fill="#555">     wp_B_angle0_bottle.jpg</text>
+<text x="390" y="589" font-size="10" fill="#555">  4. Publish result</text>
+<text x="390" y="609" font-size="11" font-weight="bold" fill="#333">Model:</text>
+<text x="390" y="625" font-size="10" fill="#555">  YOLOv8 custom trained</text>
+<text x="390" y="640" font-size="10" fill="#555">  bottles/cans/boxes</text>
+<text x="390" y="655" font-size="10" fill="#555">  mAP50 = 0.967</text>
+<line x1="390" y1="665" x2="600" y2="665" stroke="#ddd" stroke-width="0.8"/>
+<text x="390" y="682" font-size="11" font-weight="bold" fill="#E04010">Publishes:</text>
+<text x="390" y="698" font-size="10" fill="#E04010">  /detection_result (JSON)</text>
+<text x="390" y="713" font-size="10" fill="#E04010">  /vision_done</text>
+<text x="390" y="733" font-size="11" font-weight="bold" fill="#3B6D11">Subscribes:</text>
+<text x="390" y="749" font-size="10" fill="#3B6D11">  /cam_ready (angle)</text>
+
+<!-- serial_node.py -->
+<rect x="635" y="402" width="410" height="350" rx="10" fill="#fff" stroke="#185FA5" stroke-width="1"/>
+<text x="840" y="422" text-anchor="middle" font-size="13" font-weight="bold" fill="#042C53">serial_node.py</text>
+<text x="840" y="438" text-anchor="middle" font-size="10" fill="#185FA5">UART bridge — RPi ↔ ESP32</text>
+<line x1="650" y1="445" x2="1030" y2="445" stroke="#ddd" stroke-width="0.8"/>
+<text x="650" y="462" font-size="11" font-weight="bold" fill="#333">Reads from ESP32 (Serial2):</text>
+<text x="650" y="478" font-size="10" fill="#555">  "O x y yaw"    → /robot_pose + /esp_message</text>
+<text x="650" y="493" font-size="10" fill="#555">  "REACHED"      → /esp_message</text>
+<text x="650" y="508" font-size="10" fill="#555">  "CAM_READY n"  → /esp_message + /cam_ready</text>
+<text x="650" y="523" font-size="10" fill="#555">  "CAM_DONE"     → /esp_message</text>
+<text x="650" y="538" font-size="10" fill="#555">  "OBS STATE"    → /obstacle_state</text>
+<text x="650" y="558" font-size="11" font-weight="bold" fill="#333">Writes to ESP32 (Serial2):</text>
+<text x="650" y="574" font-size="10" fill="#555">  /cmd_position  → "P x y yaw\n"</text>
+<text x="650" y="589" font-size="10" fill="#555">  /mode_cmd      → "M MANUAL/AUTO/S/R\n"</text>
+<text x="650" y="604" font-size="10" fill="#555">  /cam_next      → "CAM_NEXT\n"</text>
+<text x="650" y="619" font-size="10" fill="#555">  /gui_command   → "D F/B/L/R/S\n"</text>
+<line x1="650" y1="629" x2="1030" y2="629" stroke="#ddd" stroke-width="0.8"/>
+<text x="650" y="646" font-size="11" font-weight="bold" fill="#E04010">Publishes:</text>
+<text x="650" y="662" font-size="10" fill="#E04010">  /esp_message   /robot_pose</text>
+<text x="650" y="677" font-size="10" fill="#E04010">  /cam_ready     /obstacle_state</text>
+<text x="650" y="697" font-size="11" font-weight="bold" fill="#3B6D11">Subscribes:</text>
+<text x="650" y="713" font-size="10" fill="#3B6D11">  /cmd_position  /mode_cmd</text>
+<text x="650" y="728" font-size="10" fill="#3B6D11">  /cam_next      /gui_command</text>
+<text x="650" y="743" font-size="10" fill="#3B6D11">  (direction D commands forwarded)</text>
+
+<!-- ═══════════════════════════════════════════════════════════
+     UART ARROW
+═══════════════════════════════════════════════════════════ -->
+<line x1="550" y1="780" x2="550" y2="825" stroke="#534AB7" stroke-width="2.5" marker-end="url(#arrowPurple)"/>
+<line x1="580" y1="825" x2="580" y2="780" stroke="#EF9F27" stroke-width="2.5" marker-end="url(#arrowAmber)"/>
+<rect x="300" y="790" width="450" height="22" rx="4" fill="#EEEDFE"/>
+<text x="525" y="805" text-anchor="middle" font-size="11" font-weight="bold" fill="#3C3489">UART Serial2  |  GPIO16(RX) GPIO17(TX)  |  115200 baud  |  8-N-1  |  3.3V TTL</text>
+
+<!-- ═══════════════════════════════════════════════════════════
+     UART PROTOCOL BOX
+═══════════════════════════════════════════════════════════ -->
+<rect x="30" y="830" width="1040" height="130" rx="10" fill="#EEEDFE" stroke="#534AB7" stroke-width="1.2"/>
+<text x="550" y="852" text-anchor="middle" font-size="13" font-weight="bold" fill="#3C3489">UART Communication Protocol</text>
+
+<text x="55" y="872" font-size="11" font-weight="bold" fill="#534AB7">RPi → ESP32:</text>
+<text x="55" y="888" font-size="10" fill="#333">  P x y yaw          Go to position (AUTO)</text>
+<text x="55" y="903" font-size="10" fill="#333">  D F/B/L/R/S        Direction command (MANUAL) — velocities stored on ESP32</text>
+<text x="55" y="918" font-size="10" fill="#333">  CAM_NEXT           Frame captured, move camera to next angle</text>
+<text x="55" y="933" font-size="10" fill="#333">  M MANUAL/AUTO/S/R  Mode switch / Emergency stop / Reset odometry</text>
+
+<text x="560" y="872" font-size="11" font-weight="bold" fill="#EF9F27">ESP32 → RPi:</text>
+<text x="560" y="888" font-size="10" fill="#333">  O x y yaw          Current pose at 25Hz</text>
+<text x="560" y="903" font-size="10" fill="#333">  REACHED            Waypoint reached within tolerance</text>
+<text x="560" y="918" font-size="10" fill="#333">  CAM_READY angle    Camera physically settled at this angle</text>
+<text x="560" y="933" font-size="10" fill="#333">  CAM_DONE           All camera angles complete</text>
+<text x="560" y="948" font-size="10" fill="#333">  OBS CLEAR/STATIC/DYNAMIC/RECOVERING    Obstacle state change only</text>
+
+<!-- ═══════════════════════════════════════════════════════════
+     LAYER 3 — ESP32
+═══════════════════════════════════════════════════════════ -->
+<rect x="30" y="975" width="1040" height="390" rx="14" fill="#FAECE7" stroke="#993C1D" stroke-width="1.5"/>
+<text x="55" y="999" font-size="14" font-weight="bold" fill="#4A1B0C">LAYER 3 — ESP32  |  Low Level  |  Arduino C++</text>
+<text x="55" y="1015" font-size="11" fill="#993C1D">Fully autonomous motion controller — RPi sends position targets only</text>
+
+<!-- AUTO MODE box -->
+<rect x="55" y="1027" width="310" height="318" rx="10" fill="#fff" stroke="#993C1D" stroke-width="0.8"/>
+<text x="210" y="1047" text-anchor="middle" font-size="12" font-weight="bold" fill="#4A1B0C">AUTO Mode — Position Control</text>
+<line x1="70" y1="1054" x2="350" y2="1054" stroke="#ddd" stroke-width="0.8"/>
+<text x="70" y="1071" font-size="11" font-weight="bold" fill="#333">Cascaded PID (3 loops):</text>
+<text x="70" y="1087" font-size="10" fill="#555">  Outer: distance error → velocity ref</text>
+<text x="70" y="1102" font-size="10" fill="#555">         vel_ref = KP_POS × distance</text>
+<text x="70" y="1117" font-size="10" fill="#555">  Mid:   heading error → angular ref</text>
+<text x="70" y="1132" font-size="10" fill="#555">         ang_ref = KP_YAW × yaw_error</text>
+<text x="70" y="1147" font-size="10" fill="#555">  Inner: wheel velocity PI + deadzone</text>
+<text x="70" y="1162" font-size="10" fill="#555">         PWM_L/R → H-bridge → motors</text>
+<line x1="70" y1="1172" x2="350" y2="1172" stroke="#ddd" stroke-width="0.8"/>
+<text x="70" y="1189" font-size="11" font-weight="bold" fill="#333">Camera sequence at REACHED:</text>
+<text x="70" y="1205" font-size="10" fill="#555">  Move to angle 1 → settle 500ms</text>
+<text x="70" y="1220" font-size="10" fill="#555">  Send CAM_READY → wait CAM_NEXT</text>
+<text x="70" y="1235" font-size="10" fill="#555">  Move to angle 2 → settle 500ms</text>
+<text x="70" y="1250" font-size="10" fill="#555">  Send CAM_READY → wait CAM_NEXT</text>
+<text x="70" y="1265" font-size="10" fill="#555">  Move to angle 3 → settle 500ms</text>
+<text x="70" y="1280" font-size="10" fill="#555">  Send CAM_READY → wait CAM_NEXT</text>
+<text x="70" y="1295" font-size="10" fill="#555">  Send CAM_DONE</text>
+<line x1="70" y1="1305" x2="350" y2="1305" stroke="#ddd" stroke-width="0.8"/>
+<text x="70" y="1322" font-size="10" fill="#555">Waypoints + leg axes stored on ESP32</text>
+<text x="70" y="1337" font-size="10" fill="#555">Tolerance: distance &lt; 0.10m</text>
+
+<!-- OBSTACLE box -->
+<rect x="385" y="1027" width="320" height="318" rx="10" fill="#fff" stroke="#993C1D" stroke-width="0.8"/>
+<text x="545" y="1047" text-anchor="middle" font-size="12" font-weight="bold" fill="#4A1B0C">Obstacle Avoidance (always active)</text>
+<line x1="400" y1="1054" x2="690" y2="1054" stroke="#ddd" stroke-width="0.8"/>
+<text x="400" y="1071" font-size="10" fill="#555">  Emergency stop: dist_F &lt; 0.20m</text>
+<text x="400" y="1091" font-size="11" font-weight="bold" fill="#333">State machine:</text>
+<text x="400" y="1107" font-size="10" fill="#555">  NAVIGATE</text>
+<text x="400" y="1122" font-size="10" fill="#555">    │ obstacle &lt; 0.6m</text>
+<text x="400" y="1137" font-size="10" fill="#555">  WAITING (5s observe)</text>
+<text x="400" y="1152" font-size="10" fill="#555">    │ classify by front variation</text>
+<text x="430" y="1167" font-size="10" fill="#555">  var_F &gt; 0.1m → DYNAMIC</text>
+<text x="430" y="1182" font-size="10" fill="#555">  var_F ≤ 0.1m → STATIC</text>
+<text x="400" y="1202" font-size="10" fill="#555">  STATIC:  8-case reactive avoid</text>
+<text x="400" y="1217" font-size="10" fill="#555">           → RECOVERING</text>
+<text x="400" y="1232" font-size="10" fill="#555">           → NAVIGATE</text>
+<text x="400" y="1252" font-size="10" fill="#555">  DYNAMIC: wait until all clear 2s</text>
+<text x="400" y="1267" font-size="10" fill="#555">           flush buffers</text>
+<text x="400" y="1282" font-size="10" fill="#555">           → NAVIGATE (resume)</text>
+<line x1="400" y1="1295" x2="690" y2="1295" stroke="#ddd" stroke-width="0.8"/>
+<text x="400" y="1312" font-size="10" fill="#555">Sends OBS state on every change</text>
+<text x="400" y="1327" font-size="10" fill="#555">Active in BOTH auto and manual</text>
+
+<!-- SENSORS/ACTUATORS box -->
+<rect x="725" y="1027" width="320" height="318" rx="10" fill="#fff" stroke="#993C1D" stroke-width="0.8"/>
+<text x="885" y="1047" text-anchor="middle" font-size="12" font-weight="bold" fill="#4A1B0C">Sensors + Actuators + Manual</text>
+<line x1="740" y1="1054" x2="1030" y2="1054" stroke="#ddd" stroke-width="0.8"/>
+<text x="740" y="1071" font-size="11" font-weight="bold" fill="#333">Sensors:</text>
+<text x="740" y="1087" font-size="10" fill="#555">  MPU6050 IMU — gyro Z → yaw</text>
+<text x="740" y="1102" font-size="10" fill="#555">    ZUPT drift reduction</text>
+<text x="740" y="1117" font-size="10" fill="#555">    Dynamic bias estimation</text>
+<text x="740" y="1132" font-size="10" fill="#555">  Wheel encoders ×2 → x, y odom</text>
+<text x="740" y="1147" font-size="10" fill="#555">  Ultrasonic ×3 → L, F, R distances</text>
+<line x1="740" y1="1157" x2="1030" y2="1157" stroke="#ddd" stroke-width="0.8"/>
+<text x="740" y="1174" font-size="11" font-weight="bold" fill="#333">Actuators:</text>
+<text x="740" y="1190" font-size="10" fill="#555">  DC motors ×2 — L298N H-bridge</text>
+<text x="740" y="1205" font-size="10" fill="#555">  PWM 20kHz, 8-bit resolution</text>
+<text x="740" y="1220" font-size="10" fill="#555">  Camera servo/stepper motor</text>
+<text x="740" y="1235" font-size="10" fill="#555">  Angle positions stored in ESP32</text>
+<line x1="740" y1="1245" x2="1030" y2="1245" stroke="#ddd" stroke-width="0.8"/>
+<text x="740" y="1262" font-size="11" font-weight="bold" fill="#333">MANUAL Mode:</text>
+<text x="740" y="1278" font-size="10" fill="#555">  D F → linear = +0.15 m/s</text>
+<text x="740" y="1293" font-size="10" fill="#555">  D B → linear = -0.15 m/s</text>
+<text x="740" y="1308" font-size="10" fill="#555">  D L → angular = +0.5 rad/s</text>
+<text x="740" y="1323" font-size="10" fill="#555">  D R → angular = -0.5 rad/s</text>
+<text x="740" y="1338" font-size="10" fill="#555">  D S → stop (all zero)</text>
+<text x="740" y="1353" font-size="10" fill="#555">  Velocities fixed in ESP32 code</text>
+
+<!-- RETURN TO AUTO note -->
+<rect x="55" y="1355" width="1010" height="30" rx="6" fill="#FAEEDA" stroke="#854F0B" stroke-width="0.8"/>
+<text x="560" y="1375" text-anchor="middle" font-size="11" fill="#412402">
+  Return to AUTO: ESP32 navigates to (0,0) first → sends REACHED → robot_navigator resets waypoint sequence to A → mission resumes
+</text>
+
+<!-- ═══════════ ARROW MARKERS ═══════════ -->
+<defs>
+<marker id="arrowGreen" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#3B6D11" stroke-width="1.5" stroke-linecap="round"/>
+</marker>
+<marker id="arrowRed" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#E04010" stroke-width="1.5" stroke-linecap="round"/>
+</marker>
+<marker id="arrowPurple" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#534AB7" stroke-width="1.5" stroke-linecap="round"/>
+</marker>
+<marker id="arrowAmber" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+<path d="M2 1L8 5L2 9" fill="none" stroke="#EF9F27" stroke-width="1.5" stroke-linecap="round"/>
+</marker>
+</defs>
+
+</svg>

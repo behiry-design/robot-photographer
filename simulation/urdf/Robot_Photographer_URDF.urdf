@@ -1,0 +1,356 @@
+<?xml version="1.0"?>
+<robot name="Robot_Photographer_URDF">
+
+  <!-- ================= MAIN BODY ================= -->
+  <link name="Main_Body">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="13.0"/>
+      <inertia ixx="0.2" ixy="0" ixz="0" iyy="0.2" iyz="0" izz="0.3"/>
+    </inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <mesh filename="file:/home/behiry/design_ws/install/mobile_robot_sim/share/mobile_robot_sim/meshes/Main_Body.STL"/>
+      </geometry>
+    </visual>
+    <!-- FIXED: replaced mesh collision with box (dartsim does not support mesh collision) -->
+    <collision>
+      <origin xyz="0.15 0 0.06" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.6 0.35 0.13"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <!-- ADDED: friction on Main_Body -->
+  <gazebo reference="Main_Body">
+    <mu1>0.5</mu1>
+    <mu2>0.5</mu2>
+  </gazebo>
+
+  <!-- ================= CASTER WHEEL (ADDED) ================= -->
+  <link name="caster_wheel">
+    <inertial>
+      <mass value="0.3"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <sphere radius="0.0325"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <sphere radius="0.0325"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="caster_joint" type="fixed">
+    <parent link="Main_Body"/>
+    <child link="caster_wheel"/>
+    <!-- body origin IS at caster position, so drop straight down by wheel radius -->
+    <origin xyz="0.0 0.0 -0.0350" rpy="0 0 0"/>
+  </joint>
+
+  <!-- zero friction on caster so it does not resist turning -->
+  <gazebo reference="caster_wheel">
+    <mu1>0.0</mu1>
+    <mu2>0.0</mu2>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+  </gazebo>
+
+  <!-- ================= FRONT RIGHT WHEEL ================= -->
+  <link name="FR_Wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="file:/home/behiry/design_ws/install/mobile_robot_sim/share/mobile_robot_sim/meshes/FR_Wheel.STL"/>
+      </geometry>
+    </visual>
+    <!-- ADDED: cylinder collision so wheel contacts the ground -->
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.04"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="FR_Joint" type="continuous">
+    <parent link="Main_Body"/>
+    <child link="FR_Wheel"/>
+    <origin xyz="0.295 -0.1723 -0.0025" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- ADDED: friction so FR_Wheel grips ground -->
+  <gazebo reference="FR_Wheel">
+    <mu1>1.5</mu1>
+    <mu2>1.5</mu2>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <minDepth>0.001</minDepth>
+  </gazebo>
+
+  <!-- ================= FRONT LEFT WHEEL ================= -->
+  <link name="FL_Wheel">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1.0"/>
+      <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="file:/home/behiry/design_ws/install/mobile_robot_sim/share/mobile_robot_sim/meshes/FL_Wheel.STL"/>
+      </geometry>
+    </visual>
+    <!-- ADDED: cylinder collision so wheel contacts the ground -->
+    <collision>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
+      <geometry>
+        <cylinder radius="0.0325" length="0.04"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="FL_Joint" type="continuous">
+    <parent link="Main_Body"/>
+    <child link="FL_Wheel"/>
+    <origin xyz="0.295 0.1723 -0.0025" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- ADDED: friction so FL_Wheel grips ground -->
+  <gazebo reference="FL_Wheel">
+    <mu1>1.5</mu1>
+    <mu2>1.5</mu2>
+    <kp>1000000.0</kp>
+    <kd>1.0</kd>
+    <minDepth>0.001</minDepth>
+  </gazebo>
+
+  <!-- ================= CAMERA GEAR ================= -->
+  <link name="Camera_Gear">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.5"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="file:/home/behiry/design_ws/install/mobile_robot_sim/share/mobile_robot_sim/meshes/Camera_Gear.STL"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="Camera_Joint" type="continuous">
+    <parent link="Main_Body"/>
+    <child link="Camera_Gear"/>
+    <origin xyz="0.29 -0.05 0.1637" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- ================= LARGE GEAR ================= -->
+  <link name="Large_Gear">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="0.5"/>
+      <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <mesh filename="file:/home/behiry/design_ws/install/mobile_robot_sim/share/mobile_robot_sim/meshes/Large_Gear.STL"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="Large_Gear_Joint" type="continuous">
+    <parent link="Main_Body"/>
+    <child link="Large_Gear"/>
+    <origin xyz="0.26495 -0.0506 0.1299" rpy="0 0 0"/>
+    <axis xyz="0 1 0"/>
+  </joint>
+
+  <!-- ================= IMU ================= -->
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.05"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <box size="0.02 0.02 0.01"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="imu_joint" type="fixed">
+    <parent link="Main_Body"/>
+    <child link="imu_link"/>
+    <origin xyz="0.175 0 0.13" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ================= ULTRASONIC LEFT ================= -->
+  <link name="ultrasonic_link">
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.03" length="0.05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="ultrasonic_joint" type="fixed">
+    <parent link="Main_Body"/>
+    <child link="ultrasonic_link"/>
+    <origin xyz="0.3 0.1 0.12" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ================= ULTRASONIC RIGHT ================= -->
+  <link name="ultrasonic_second_link">
+    <inertial>
+      <mass value="0.1"/>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <inertia ixx="1e-5" ixy="0" ixz="0" iyy="1e-5" iyz="0" izz="1e-5"/>
+    </inertial>
+    <visual>
+      <geometry>
+        <cylinder radius="0.03" length="0.05"/>
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="ultrasonic_second_joint" type="fixed">
+    <parent link="Main_Body"/>
+    <child link="ultrasonic_second_link"/>
+    <origin xyz="0.3 -0.1 0.12" rpy="0 0 0"/>
+  </joint>
+
+  <!-- ================= ROS2 CONTROL ================= -->
+  <ros2_control name="RobotSystem" type="system">
+    <hardware>
+      <plugin>gz_ros2_control/GazeboSimSystem</plugin>
+    </hardware>
+
+    <joint name="FR_Joint">
+      <command_interface name="velocity">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      </command_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+
+    <joint name="FL_Joint">
+      <command_interface name="velocity">
+        <param name="min">-1</param>
+        <param name="max">1</param>
+      </command_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="position"/>
+    </joint>
+  </ros2_control>
+
+  <!-- ================== ADDITIONS ================== -->
+
+  <!-- Gazebo ros2_control plugin: connects ROS2 controllers to Gazebo -->
+  <gazebo>
+    <plugin filename="gz_ros2_control-system"
+            name="gz_ros2_control::GazeboSimROS2ControlPlugin">
+      <parameters>
+        /home/behiry/design_ws/install/mobile_robot_sim/share/mobile_robot_sim/config/joint_controller.yaml
+      </parameters>
+    </plugin>
+  </gazebo>
+
+  <!--Adding IMU Sensor Plugin-->
+  <gazebo reference="imu_link">
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>50</update_rate>
+      <topic>imu</topic>
+      <gz_frame_id>imu_link</gz_frame_id>
+      <plugin
+        filename="gz-sim-imu-system"
+        name="gz::sim::systems::Imu"/>
+    </sensor>
+  </gazebo>
+
+  <!--Adding ultrasonic sensor plugin-->
+  <gazebo reference="ultrasonic_link">
+    <sensor name="lidar_sensor_left" type="gpu_lidar">
+      <update_rate>50</update_rate>
+      <topic>scan</topic>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>640</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples>
+            <resolution>0.01</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.05</min>
+          <max>10.0</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+    </sensor>
+  </gazebo>
+
+  <!--Adding ultrasonic sensor plugin 2-->
+  <gazebo reference="ultrasonic_second_link">
+    <sensor name="lidar_sensor_right" type="gpu_lidar">
+      <pose>0 0 0 0 1.57 0</pose>
+      <update_rate>50</update_rate>
+      <topic>scan_right</topic>
+      <gz_frame>ultrasonic_second_link</gz_frame>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>640</samples>
+            <resolution>1</resolution>
+            <min_angle>-3</min_angle>
+            <max_angle>3</max_angle>
+          </horizontal>
+          <vertical>
+            <samples>1</samples>
+            <resolution>0.01</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.05</min>
+          <max>10.0</max>
+          <resolution>0.01</resolution>
+        </range>
+      </ray>
+      <always_on>true</always_on>
+      <visualize>true</visualize>
+    </sensor>
+  </gazebo>
+
+</robot>

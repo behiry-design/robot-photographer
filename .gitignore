@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+
+# ROS2 build
+build/
+install/
+log/
+*.log
+
+# Gazebo
+.gz/
+/tmp/*.sdf
+
+# VS Code
+.vscode/
+
+# Arduino
+*.elf
+*.bin
+*.hex
+
+# OS
+.DS_Store
+Thumbs.db
