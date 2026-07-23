@@ -262,12 +262,14 @@ robot-photographer/
 
 ## 👥 Team
 
-- **[Your Name]** — System integration, ROS2 architecture, vision pipeline, GUI
-- **[Team Member 2]** — ESP32 firmware, motor control, FreeRTOS tasks
-- **[Team Member 3]** — YOLOv8 training, dataset preparation
-- **[Team Member 4]** — Mechanical design, wiring, hardware integration
+- **[Shahd Ahmed , Ahmed Behiry]** — Gazebo Simulation
+- **[Ahmed Behiry,Rewan Mohamed ]** — System integration, ROS2 architecture, vision pipeline, GUI
+- **[Ahmed Hisham]** — ESP32 firmware, motor control, FreeRTOS tasks
+- **[Ahmed Behiry]** — YOLOv8 training, dataset preparation
+- **[Ahmed Hisham ,Adham Hamada]** — Mechanical design, wiring, hardware integration
+- **[Shahd Ahmed , Rewan Mohamed]** — Report & Documentation 
 
-**Supervisor:** Dr. Shady [Last Name] — MCT334 Robotics Subject
+**Supervisor:** Dr. Shady Maged  — MCT334 Design of Mechatronics systems 2 course
 
 **Institution:** Faculty of Engineering, Ain Shams University — Mechatronics & Automation Engineering, Class of 2027
 
