@@ -2,7 +2,7 @@
 
 > MCT334 Robotics Project | Ain Shams University — Mechatronics & Automation Engineering
 
-A fully autonomous robot that navigates a predefined 3×3 meter square path, stops at three waypoints, scans shelves using a servo-mounted camera, detects target objects using YOLOv8, captures annotated photos, and streams everything live to a PyQt5 mission control GUI — all coordinated over ROS2 Jazzy across three computing nodes connected via WiFi hotspot.
+A semi autonomous robot that navigates a predefined 3×3 meter square path, stops at three waypoints, scans shelves using a servo-mounted camera, detects target objects using YOLOv8, captures annotated photos, and streams everything live to a PyQt5 mission control GUI — all coordinated over ROS2 Jazzy across three computing nodes connected via WiFi hotspot.
 
 ---
 
